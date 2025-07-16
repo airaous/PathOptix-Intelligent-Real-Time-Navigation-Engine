@@ -14,7 +14,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://deeproute-ai-api.zeabur.app/api/$1"
+      "dest": "https://pathoptix-intelligent-real-time.zeabur.app/api/$1"
     },
     {
       "src": "/(.*)",
@@ -22,7 +22,7 @@
     }
   ],
   "env": {
-    "VITE_API_BASE_URL": "https://deeproute-ai-api.zeabur.app",
+    "VITE_API_BASE_URL": "https://pathoptix-intelligent-real-time.zeabur.app",
     "VITE_ENVIRONMENT": "production"
   },
   "buildCommand": "npm run build",
