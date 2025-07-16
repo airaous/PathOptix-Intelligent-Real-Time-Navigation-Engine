@@ -1,0 +1,343 @@
+{
+  "timestamp": "2025-07-16T04:16:56.260528",
+  "demo_results": {
+    "gnn_predictions": [
+      {
+        "route_id": 0,
+        "efficiency_score": 0.49876636266708374,
+        "prediction_time_ms": 6.025791168212891,
+        "graph_nodes": 6,
+        "graph_edges": 14
+      },
+      {
+        "route_id": 1,
+        "efficiency_score": 0.5047010779380798,
+        "prediction_time_ms": 4.166364669799805,
+        "graph_nodes": 12,
+        "graph_edges": 30
+      },
+      {
+        "route_id": 2,
+        "efficiency_score": 0.5069438815116882,
+        "prediction_time_ms": 4.519939422607422,
+        "graph_nodes": 10,
+        "graph_edges": 24
+      },
+      {
+        "route_id": 3,
+        "efficiency_score": 0.4916032552719116,
+        "prediction_time_ms": 5.047082901000977,
+        "graph_nodes": 10,
+        "graph_edges": 24
+      },
+      {
+        "route_id": 4,
+        "efficiency_score": 0.5096181035041809,
+        "prediction_time_ms": 4.519224166870117,
+        "graph_nodes": 10,
+        "graph_edges": 24
+      }
+    ],
+    "dqn_decisions": [
+      {
+        "episode": 0,
+        "total_reward": 6.969877553251071,
+        "steps": 7,
+        "final_distance": 0.013156578601552098,
+        "actions": [
+          {
+            "step": 0,
+            "action": 0,
+            "reward": 0.9919086537820593,
+            "position": [
+              40.72578522208696,
+              -74.03092503309058
+            ]
+          },
+          {
+            "step": 1,
+            "action": 1,
+            "reward": 0.9932522525106285,
+            "position": [
+              40.72783862557303,
+              -74.03160150247231
+            ]
+          },
+          {
+            "step": 2,
+            "action": 3,
+            "reward": 0.9947859704898878,
+            "position": [
+              40.72765853984295,
+              -74.03311001136115
+            ]
+          },
+          {
+            "step": 3,
+            "action": 2,
+            "reward": 0.9947858303944905,
+            "position": [
+              40.72735267836597,
+              -74.03307973865142
+            ]
+          },
+          {
+            "step": 4,
+            "action": 3,
+            "reward": 0.998153837677739,
+            "position": [
+              40.72975440244689,
+              -74.03652971457161
+            ]
+          },
+          {
+            "step": 5,
+            "action": 1,
+            "reward": 0.9985580761413967,
+            "position": [
+              40.72836630025057,
+              -74.03770678213824
+            ]
+          },
+          {
+            "step": 6,
+            "action": 2,
+            "reward": 0.9984329322548697,
+            "position": [
+              40.728495836976116,
+              -74.0368051494781
+            ]
+          }
+        ]
+      },
+      {
+        "episode": 1,
+        "total_reward": 5.871904180554416,
+        "steps": 6,
+        "final_distance": 0.04401936833136246,
+        "actions": [
+          {
+            "step": 0,
+            "action": 3,
+            "reward": 0.9614174282789827,
+            "position": [
+              40.76333797602905,
+              -74.02908067564242
+            ]
+          },
+          {
+            "step": 1,
+            "action": 2,
+            "reward": 0.9687742633194356,
+            "position": [
+              40.756059466166676,
+              -74.0264889329329
+            ]
+          },
+          {
+            "step": 2,
+            "action": 2,
+            "reward": 0.9754813078993853,
+            "position": [
+              40.7492864779512,
+              -74.02433801675714
+            ]
+          },
+          {
+            "step": 3,
+            "action": 0,
+            "reward": 0.981816468512457,
+            "position": [
+              40.74297200371627,
+              -74.02203156753583
+            ]
+          },
+          {
+            "step": 4,
+            "action": 3,
+            "reward": 0.9915359793972962,
+            "position": [
+              40.73264649681131,
+              -74.02176781414362
+            ]
+          },
+          {
+            "step": 5,
+            "action": 3,
+            "reward": 0.9928787331468593,
+            "position": [
+              40.73264649681131,
+              -74.02176781414362
+            ]
+          }
+        ]
+      },
+      {
+        "episode": 2,
+        "total_reward": 7.681387086757543,
+        "steps": 8,
+        "final_distance": 0.0814008411601785,
+        "actions": [
+          {
+            "step": 0,
+            "action": 1,
+            "reward": 0.9299943088635089,
+            "position": [
+              40.75243115456967,
+              -74.03050087883916
+            ]
+          },
+          {
+            "step": 1,
+            "action": 0,
+            "reward": 0.9369229300701699,
+            "position": [
+              40.75476329675101,
+              -74.02307487715338
+            ]
+          },
+          {
+            "step": 2,
+            "action": 0,
+            "reward": 0.9441572548417804,
+            "position": [
+              40.755233548765815,
+              -74.01468349629079
+            ]
+          },
+          {
+            "step": 3,
+            "action": 2,
+            "reward": 0.9508973357394624,
+            "position": [
+              40.7560919619839,
+              -74.00712223496146
+            ]
+          },
+          {
+            "step": 4,
+            "action": 2,
+            "reward": 0.9589761393529737,
+            "position": [
+              40.756693913276195,
+              -73.997715727424
+            ]
+          },
+          {
+            "step": 5,
+            "action": 3,
+            "reward": 0.9726191458982519,
+            "position": [
+              40.76246668688189,
+              -73.98386280010045
+            ]
+          },
+          {
+            "step": 6,
+            "action": 3,
+            "reward": 0.9903355058631998,
+            "position": [
+              40.768753596522984,
+              -73.96598327958843
+            ]
+          },
+          {
+            "step": 7,
+            "action": 1,
+            "reward": 0.9974844661281963,
+            "position": [
+              40.77070271190594,
+              -73.95979277199491
+            ]
+          }
+        ]
+      }
+    ],
+    "api_responses": [
+      {
+        "request_id": 0,
+        "confidence": 0.598817503452301,
+        "estimated_duration": 1348.4209094313378,
+        "estimated_distance": 5618.420455963907,
+        "efficiency_score": 0.498817503452301,
+        "response_time_ms": 6.046772003173828,
+        "recommendation": "Consider alternatives"
+      },
+      {
+        "request_id": 1,
+        "confidence": 0.5719697833061218,
+        "estimated_duration": 4452.965848330496,
+        "estimated_distance": 18554.02436804373,
+        "efficiency_score": 0.4719697833061218,
+        "response_time_ms": 4.524469375610352,
+        "recommendation": "Consider alternatives"
+      },
+      {
+        "request_id": 2,
+        "confidence": 0.580145126581192,
+        "estimated_duration": 562.7664532432124,
+        "estimated_distance": 2344.8602218467186,
+        "efficiency_score": 0.480145126581192,
+        "response_time_ms": 1.9977092742919922,
+        "recommendation": "Consider alternatives"
+      }
+    ],
+    "comparison_metrics": [
+      {
+        "scenario": 0,
+        "google_duration": 1800,
+        "google_distance": 25000,
+        "ml_duration": 1362.772983349718,
+        "ml_efficiency": 0.8096796604634852,
+        "improvement_percent": 24.290389813904554,
+        "should_override": true,
+        "traffic_condition": "heavy"
+      },
+      {
+        "scenario": 1,
+        "google_duration": 900,
+        "google_distance": 12000,
+        "ml_duration": 756.8285068666448,
+        "ml_efficiency": 0.5302647893827968,
+        "improvement_percent": 15.907943681483907,
+        "should_override": false,
+        "traffic_condition": "light"
+      },
+      {
+        "scenario": 2,
+        "google_duration": 2400,
+        "google_distance": 35000,
+        "ml_duration": 2158.8322906732506,
+        "ml_efficiency": 0.33495515184270763,
+        "improvement_percent": 10.048654555281226,
+        "should_override": false,
+        "traffic_condition": "moderate"
+      }
+    ],
+    "performance_stats": {
+      "gnn_avg_prediction_time": 4.855680465698242,
+      "api_avg_response_time": 4.189650217692058,
+      "dqn_avg_reward": 6.841056273521009,
+      "ml_override_rate": 0.3333333333333333,
+      "avg_route_improvement": 16.748996016889894
+    },
+    "data_stats": {
+      "total_routes": 100,
+      "distance_range": [
+        1.4073774506853203,
+        13.256793553778191
+      ],
+      "duration_range": [
+        1.6888529408223842,
+        15.908152264533829
+      ]
+    }
+  },
+  "system_status": "operational",
+  "components": {
+    "gnn": "operational",
+    "dqn": "operational",
+    "api": "operational",
+    "frontend": "ready"
+  }
+}
