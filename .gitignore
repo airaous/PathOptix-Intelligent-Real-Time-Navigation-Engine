@@ -76,3 +76,13 @@ jspm_packages/
 # Temporary folders
 tmp/
 temp/
+
+# Security - Development notebooks with potential secrets
+# SECURITY NOTE: deeproute_ai_development.ipynb contains API keys - clean before committing
+*.ipynb
+jupyter_checkpoints/
+
+# Backup files that might contain secrets
+*.bak
+*.backup
+*.orig

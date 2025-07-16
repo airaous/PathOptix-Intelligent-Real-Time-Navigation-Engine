@@ -5,7 +5,8 @@ const MLPredictionPanel = ({
   route, 
   onMLPrediction, 
   showComparison = false,
-  onAdvancedOptimization 
+  onAdvancedOptimization,
+  autoFetch = false  // Add prop to control automatic fetching
 }) => {
   const [mlPrediction, setMLPrediction] = useState(null);
   const [advancedOptimization, setAdvancedOptimization] = useState(null);
@@ -96,8 +97,11 @@ const MLPredictionPanel = ({
   }, [route, onMLPrediction, onAdvancedOptimization]);
 
   useEffect(() => {
-    fetchMLPrediction();
-  }, [fetchMLPrediction]);
+    // Only auto-fetch if explicitly enabled
+    if (autoFetch && route && route.origin && route.destination) {
+      fetchMLPrediction();
+    }
+  }, [fetchMLPrediction, autoFetch, route]);
 
   // Auto-refresh real-time data every 5 minutes
   useEffect(() => {
@@ -139,153 +143,162 @@ const MLPredictionPanel = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg shadow-lg p-6 border border-gray-200"
+      className="bg-white rounded-lg shadow-lg h-full flex flex-col overflow-hidden"
     >
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">
-          AI DeepRoute AI Prediction
+      <div className="flex items-center justify-between p-3 border-b border-gray-200 flex-shrink-0">
+        <h3 className="text-sm font-semibold text-gray-800">
+          🤖 AI DeepRoute Prediction
         </h3>
         {isLoading && (
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
         )}
       </div>
 
-      {isLoading ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
-            <p className="text-gray-600 text-sm">Analyzing route with AI...</p>
-          </div>
-        </div>
-      ) : mlPrediction ? (
-        <div className="space-y-4">
-          {/* Confidence Score */}
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">Confidence:</span>
-            <span className={`font-bold ${getConfidenceColor(mlPrediction.confidence)}`}>
-              {(mlPrediction.confidence * 100).toFixed(1)}%
-            </span>
-          </div>
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-3">
 
-          {/* Efficiency Score */}
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">Route Efficiency:</span>
-            <div className="flex items-center space-x-2">
-              <div className="w-24 bg-gray-200 rounded-full h-2">
-                <div
-                  className={`h-2 rounded-full ${getEfficiencyColor(mlPrediction.efficiency_score)}`}
-                  style={{ width: `${mlPrediction.efficiency_score * 100}%` }}
-                ></div>
-              </div>
-              <span className="text-sm font-medium">
-                {(mlPrediction.efficiency_score * 100).toFixed(0)}%
-              </span>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-6">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
+              <p className="text-gray-600 text-xs">Analyzing route...</p>
             </div>
           </div>
+        ) : mlPrediction ? (
+          <div className="space-y-3">
+            {/* Main Metrics - Vertical Layout for Portrait */}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-blue-50 rounded-lg p-2 text-center">
+                <div className="text-xs text-gray-600 mb-1">Confidence</div>
+                <div className={`text-sm font-bold ${getConfidenceColor(mlPrediction?.confidence || 0)}`}>
+                  {mlPrediction?.confidence ? (mlPrediction.confidence * 100).toFixed(1) : '0.0'}%
+                </div>
+              </div>
+              <div className="bg-green-50 rounded-lg p-2 text-center">
+                <div className="text-xs text-gray-600 mb-1">Efficiency</div>
+                <div className="text-sm font-bold text-gray-800">
+                  {mlPrediction?.efficiency_score ? (mlPrediction.efficiency_score * 100).toFixed(0) : '0'}%
+                </div>
+              </div>
+            </div>
 
-          {/* Predicted Duration */}
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">ML Duration:</span>
-            <span className="font-medium">
-              {Math.round(mlPrediction.estimated_duration / 60)} min
-            </span>
+            {/* Duration & Distance Row */}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-purple-50 rounded-lg p-2 text-center">
+                <div className="text-xs text-gray-600 mb-1">AI Duration</div>
+                <div className="text-sm font-bold text-gray-800">
+                  {Math.round((mlPrediction?.estimated_duration || 0) / 60)} min
+                </div>
+              </div>
+              <div className="bg-yellow-50 rounded-lg p-2 text-center">
+                <div className="text-xs text-gray-600 mb-1">AI Distance</div>
+                <div className="text-sm font-bold text-gray-800">
+                  {mlPrediction?.estimated_distance 
+                    ? (mlPrediction.estimated_distance / 1000).toFixed(1) 
+                    : '0.0'} km
+                </div>
+              </div>
+            </div>
+
+            {/* Recommendation Section */}
+            <div className="bg-blue-50 rounded-lg p-2">
+              <div className="text-xs text-blue-600 font-medium mb-1">
+                🎯 AI Recommendation
+              </div>
+              <div className="text-xs text-blue-800 mb-2">
+                {mlPrediction?.recommendation || 'No recommendation available'}
+              </div>
+              
+              {/* High Confidence Indicator */}
+              {mlPrediction.confidence > 0.75 && (
+                <div className="bg-green-100 border border-green-300 rounded-lg p-1">
+                  <div className="text-xs text-green-800 font-medium">
+                    ✅ HIGH CONFIDENCE: AI route recommended!
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-
-          {/* Predicted Distance */}
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">ML Distance:</span>
-            <span className="font-medium">
-              {(mlPrediction.estimated_distance / 1000).toFixed(1)} km
-            </span>
-          </div>
-
-          {/* Recommendation */}
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-800 font-medium">
-              RECOMMENDATION: {mlPrediction.recommendation}
+        ) : (
+          <div className="text-center py-4">
+            <div className="text-gray-400 mb-2">
+              🤖
+            </div>
+            <p className="text-gray-500 mb-3 text-xs">
+              Get AI predictions for your route
             </p>
-          </div>
-
-          {/* Override Indicator */}
-          {mlPrediction.confidence > 0.75 && (
-            <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg"
+            <button
+              onClick={fetchMLPrediction}
+              disabled={!route || !route.origin || !route.destination}
+              className="px-3 py-2 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
-              <p className="text-green-800 text-sm font-medium">
-                HIGH CONFIDENCE: AI route recommended!
-              </p>
+              Analyze Route with AI
+            </button>
+          </div>
+        )}
+
+        {/* Advanced Optimization Tab */}
+        <div className="border-t border-gray-200 pt-2">
+          <button
+            onClick={() => setActiveTab('optimization')}
+            className={`w-full px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+              activeTab === 'optimization' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'
+            }`}
+          >
+            🚀 Advanced Optimization
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {activeTab === 'optimization' && advancedOptimization && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-2 p-2 bg-gray-50 rounded-lg border border-gray-200"
+            >
+              <h4 className="text-xs font-semibold text-gray-800 mb-2">
+                🚀 Optimization Results
+              </h4>
+              <div className="grid grid-cols-2 gap-2">
+                {/* Optimized Duration */}
+                <div className="bg-blue-50 rounded-lg p-2 text-center">
+                  <div className="text-xs text-gray-600 mb-1">Duration</div>
+                  <div className="text-xs font-bold text-gray-800">
+                    {Math.round(advancedOptimization.optimized_duration / 60)} min
+                  </div>
+                </div>
+
+                {/* Optimized Distance */}
+                <div className="bg-green-50 rounded-lg p-2 text-center">
+                  <div className="text-xs text-gray-600 mb-1">Distance</div>
+                  <div className="text-xs font-bold text-gray-800">
+                    {advancedOptimization?.optimized_distance 
+                      ? (advancedOptimization.optimized_distance / 1000).toFixed(1) 
+                      : '0.0'} km
+                  </div>
+                </div>
+
+                {/* Fuel Savings */}
+                <div className="bg-yellow-50 rounded-lg p-2 text-center">
+                  <div className="text-xs text-gray-600 mb-1">Fuel Saved</div>
+                  <div className="text-xs font-bold text-gray-800">
+                    {advancedOptimization?.fuel_savings?.toFixed(2) || '0.00'} L
+                  </div>
+                </div>
+
+                {/* Cost Savings */}
+                <div className="bg-purple-50 rounded-lg p-2 text-center">
+                  <div className="text-xs text-gray-600 mb-1">Cost Saved</div>
+                  <div className="text-xs font-bold text-gray-800">
+                    ${advancedOptimization?.cost_savings?.toFixed(2) || '0.00'}
+                  </div>
+                </div>
+              </div>
             </motion.div>
           )}
-        </div>
-      ) : (
-        <div className="text-center py-4">
-          <p className="text-gray-500">
-            Select a route to get AI prediction
-          </p>
-        </div>
-      )}
-
-      {/* Advanced Optimization Tab */}
-      <div className="mt-6">
-        <button
-          onClick={() => setActiveTab('optimization')}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            activeTab === 'optimization' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'
-          }`}
-        >
-          Advanced Optimization
-        </button>
+        </AnimatePresence>
       </div>
-
-      <AnimatePresence>
-        {activeTab === 'optimization' && advancedOptimization && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200"
-          >
-            <h4 className="text-md font-semibold text-gray-800 mb-2">
-              Advanced Optimization Results
-            </h4>
-            <div className="space-y-2">
-              {/* Optimized Duration */}
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Optimized Duration:</span>
-                <span className="font-medium">
-                  {Math.round(advancedOptimization.optimized_duration / 60)} min
-                </span>
-              </div>
-
-              {/* Optimized Distance */}
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Optimized Distance:</span>
-                <span className="font-medium">
-                  {(advancedOptimization.optimized_distance / 1000).toFixed(1)} km
-                </span>
-              </div>
-
-              {/* Fuel Savings */}
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Fuel Savings:</span>
-                <span className="font-medium">
-                  {advancedOptimization.fuel_savings.toFixed(2)} L
-                </span>
-              </div>
-
-              {/* Cost Savings */}
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Cost Savings:</span>
-                <span className="font-medium">
-                  ${advancedOptimization.cost_savings.toFixed(2)}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 };

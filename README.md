@@ -124,7 +124,7 @@ Enable these APIs in the Google Cloud Console:
 ### Step 4: Configure API Key
 Add your API key to `.env.local`:
 ```env
-VITE_GOOGLE_MAPS_API_KEY=AIzaSyBvOkBN0HI0Lb-FY8BH4sF9BqBvOkBN0HI
+VITE_GOOGLE_MAPS_API_KEY=your_actual_google_maps_api_key_here
 ```
 
 > **⚠️ Important**: Keep your API key secure and never commit it to version control.

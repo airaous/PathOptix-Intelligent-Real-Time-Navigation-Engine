@@ -1,11 +1,16 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 const RealTimeAdaptation = ({ routeData, onRouteUpdate }) => {
   const [adaptations, setAdaptations] = useState([]);
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(null);
+
+  // Generate unique ID for adaptations
+  const generateUniqueId = useCallback(() => {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }, []);
 
   useEffect(() => {
     if (isMonitoring && routeData) {
@@ -26,7 +31,7 @@ const RealTimeAdaptation = ({ routeData, onRouteUpdate }) => {
       
       if (data.adaptation.should_reroute) {
         setAdaptations(prev => [...prev, {
-          id: Date.now(),
+          id: generateUniqueId(),
           timestamp: new Date(),
           type: 'reroute',
           reason: data.adaptation.adaptation_reason,

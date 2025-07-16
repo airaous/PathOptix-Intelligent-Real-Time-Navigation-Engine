@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useCallback, useRef, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { GoogleMap, DirectionsRenderer, TrafficLayer, Marker } from '@react-google-maps/api';
-import AutocompleteInput from './AutocompleteInput';
-import { MapPin, Navigation, Target } from 'lucide-react';
+import ModernAutocompleteInput from './ModernAutocompleteInput'; // Use the new component
+import { MapPin, Navigation, Target, Route } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const mapContainerStyle = {
@@ -38,12 +38,19 @@ const MapView = forwardRef(({
   alternateRoutes,
   onRouteSelect,
   aiRouteData,
-  showAiRoute
+  showAiRoute,
+  onCalculateRoute,
+  isCalculating,
+  autoCalculateRoute,
+  onToggleAutoCalculate,
+  onClearRoute
 }, ref) => {
   const [map, setMap] = useState(null);
   const [clickMarker, setClickMarker] = useState(null);
   const [isSelectingOrigin, setIsSelectingOrigin] = useState(false);
   const [isSelectingDestination, setIsSelectingDestination] = useState(false);
+  const [directionsRendererRef, setDirectionsRendererRef] = useState(null);
+  const [renderKey, setRenderKey] = useState(0);
 
   const mapRef = useRef();
 
@@ -113,6 +120,7 @@ const MapView = forwardRef(({
 
   // Handle route selection from alternate routes
   const handleDirectionsLoad = useCallback((directionsRenderer) => {
+    setDirectionsRendererRef(directionsRenderer);
     // Configure the directions renderer
     directionsRenderer.setOptions({
       suppressMarkers: false,
@@ -126,6 +134,16 @@ const MapView = forwardRef(({
     });
   }, [selectedRouteIndex]);
 
+  // Effect to handle route clearing
+  useEffect(() => {
+    if (!directionsResult && directionsRendererRef) {
+      // Force clear the directions renderer when directionsResult becomes null
+      directionsRendererRef.setDirections(null);
+      // Also increment render key to force remount of DirectionsRenderer components
+      setRenderKey(prev => prev + 1);
+    }
+  }, [directionsResult, directionsRendererRef]);
+
   return (
     <div className="relative h-full w-full">
       {/* Search Controls */}
@@ -136,7 +154,7 @@ const MapView = forwardRef(({
           transition={{ delay: 0.2, duration: 0.5 }}
           className="space-y-3"
         >
-          <AutocompleteInput
+          <ModernAutocompleteInput
             placeholder="From: Enter starting location"
             value={origin}
             onChange={onOriginChange}
@@ -144,7 +162,7 @@ const MapView = forwardRef(({
             isActive={isSelectingOrigin}
             onMapSelectToggle={() => setIsSelectingOrigin(!isSelectingOrigin)}
           />
-          <AutocompleteInput
+          <ModernAutocompleteInput
             placeholder="To: Enter destination"
             value={destination}
             onChange={onDestinationChange}
@@ -152,6 +170,43 @@ const MapView = forwardRef(({
             isActive={isSelectingDestination}
             onMapSelectToggle={() => setIsSelectingDestination(!isSelectingDestination)}
           />
+          
+          {/* Route Calculation Controls */}
+          {origin && destination && (
+            <div className="flex items-center space-x-2 bg-white rounded-lg p-2 shadow-lg">
+              <button
+                onClick={onCalculateRoute}
+                disabled={isCalculating}
+                className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  isCalculating
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-blue-500 text-white hover:bg-blue-600 shadow-md'
+                }`}
+              >
+                {isCalculating ? 'Calculating...' : 'Calculate Route'}
+              </button>
+              
+              <button
+                onClick={onToggleAutoCalculate}
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                  autoCalculateRoute
+                    ? 'bg-green-100 text-green-700 border border-green-300'
+                    : 'bg-gray-100 text-gray-600 border border-gray-300'
+                }`}
+                title={autoCalculateRoute ? 'Auto-calculate ON' : 'Auto-calculate OFF'}
+              >
+                AUTO {autoCalculateRoute ? 'ON' : 'OFF'}
+              </button>
+              
+              <button
+                onClick={onClearRoute}
+                className="px-3 py-2 rounded-lg text-xs font-medium bg-red-100 text-red-700 border border-red-300 hover:bg-red-200 transition-all duration-200"
+                title="Clear route"
+              >
+                CLEAR
+              </button>
+            </div>
+          )}
         </motion.div>
       </div>
 
@@ -198,6 +253,7 @@ const MapView = forwardRef(({
         {/* Directions Renderer */}
         {directionsResult && (
           <DirectionsRenderer
+            key={`directions-${renderKey}-${directionsResult.routes?.[0]?.legs?.[0]?.start_address}-${directionsResult.routes?.[0]?.legs?.[0]?.end_address}`}
             options={directionsOptions}
             directions={directionsResult}
             routeIndex={selectedRouteIndex}
@@ -208,6 +264,7 @@ const MapView = forwardRef(({
         {/* AI Route Renderer */}
         {showAiRoute && aiRouteData && directionsResult && (
           <DirectionsRenderer
+            key={`ai-route-${renderKey}-${directionsResult.routes?.[0]?.legs?.[0]?.start_address}-${directionsResult.routes?.[0]?.legs?.[0]?.end_address}`}
             options={{
               suppressMarkers: true,
               polylineOptions: {

@@ -13,11 +13,25 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
+    // Check if this is a browser extension related error that we should ignore
+    const isExtensionError = error && error.message && (
+      error.message.includes('runtime.lastError') ||
+      error.message.includes('message channel closed before a response was received') ||
+      error.message.includes('A listener indicated an asynchronous response')
+    );
+
+    if (isExtensionError) {
+      // Reset error state for extension errors and continue
+      this.setState({ hasError: false, error: null, errorInfo: null });
+      return;
+    }
+
     this.setState({
       error: error,
       errorInfo: errorInfo
     });
     
+    // Only log non-extension errors
     console.error('PathOptix Error:', error, errorInfo);
   }
 

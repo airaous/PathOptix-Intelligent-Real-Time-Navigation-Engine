@@ -23,6 +23,11 @@ const AdvancedFeaturesPanel = ({
   const [ecoMetrics, setEcoMetrics] = useState(null);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
 
+  // Generate unique ID for notifications
+  const generateUniqueId = useCallback(() => {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }, []);
+
   // Feature configurations
   const featureConfig = {
     smartRerouting: {
@@ -84,7 +89,7 @@ const AdvancedFeaturesPanel = ({
       // Add notification for feature change
       const config = featureConfig[featureName];
       setNotifications(prev => [...prev, {
-        id: Date.now(),
+        id: generateUniqueId(),
         type: newFeatures[featureName] ? 'enabled' : 'disabled',
         message: `${config.title} ${newFeatures[featureName] ? 'enabled' : 'disabled'}`,
         icon: config.icon
@@ -92,7 +97,7 @@ const AdvancedFeaturesPanel = ({
       
       return newFeatures;
     });
-  }, [onFeatureToggle]);
+  }, [onFeatureToggle, generateUniqueId]);
 
   // Clear notification
   const clearNotification = useCallback((id) => {

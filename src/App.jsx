@@ -50,6 +50,7 @@ function App() {
   const [advancedFeatures, setAdvancedFeatures] = useState({});
   const [aiRouteData, setAiRouteData] = useState(null);
   const [showAiRoute, setShowAiRoute] = useState(false);
+  const [autoCalculateRoute, setAutoCalculateRoute] = useState(false); // Default to manual calculation
 
   // Refs
   const directionsServiceRef = useRef(null);
@@ -187,10 +188,10 @@ function App() {
             copyrights: route.copyrights
           });
 
-          // Automatically get AI route suggestions after successful route calculation
-          setTimeout(() => {
-            getAiRouteSuggestions();
-          }, 1000);
+          // Note: AI route suggestions will only be triggered manually by user
+          // setTimeout(() => {
+          //   getAiRouteSuggestions();
+          // }, 1000);
         } else {
           console.error('Directions request failed:', status);
           setError(`Route calculation failed: ${status}`);
@@ -204,12 +205,12 @@ function App() {
     }
   }, [origin, destination, travelMode, getAiRouteSuggestions]);
 
-  // Effect to calculate route when origin, destination, or travel mode changes
+  // Effect to calculate route when origin, destination, or travel mode changes (only if auto-calculate is enabled)
   useEffect(() => {
-    if (origin && destination) {
+    if (origin && destination && autoCalculateRoute) {
       calculateRoute();
     }
-  }, [origin, destination, travelMode, calculateRoute]);
+  }, [origin, destination, travelMode, calculateRoute, autoCalculateRoute]);
 
   // Clear route
   const clearRoute = useCallback(() => {
@@ -219,6 +220,9 @@ function App() {
     setRouteInfo(null);
     setAlternateRoutes([]);
     setSelectedRouteIndex(0);
+    setAiRouteData(null);
+    setShowAiRoute(false);
+    setMLPrediction(null);
   }, []);
 
   // Handle route selection
@@ -347,6 +351,11 @@ function App() {
                       onRouteSelect={handleRouteSelect}
                       aiRouteData={aiRouteData}
                       showAiRoute={showAiRoute}
+                      onCalculateRoute={calculateRoute}
+                      isCalculating={isCalculating}
+                      autoCalculateRoute={autoCalculateRoute}
+                      onToggleAutoCalculate={() => setAutoCalculateRoute(!autoCalculateRoute)}
+                      onClearRoute={clearRoute}
                     />
 
                     {/* Floating Controls */}
@@ -379,7 +388,13 @@ function App() {
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => setShowMLPanel(!showMLPanel)}
+                            onClick={() => {
+                              setShowMLPanel(!showMLPanel);
+                              if (showMLPanel) {
+                                // Clear ML data when turning off
+                                setMLPrediction(null);
+                              }
+                            }}
                             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                               showMLPanel
                                 ? 'bg-purple-500 text-white shadow-lg'
@@ -395,7 +410,14 @@ function App() {
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={getAiRouteSuggestions}
+                            onClick={() => {
+                              if (showAiRoute) {
+                                setShowAiRoute(false);
+                                setAiRouteData(null);
+                              } else {
+                                getAiRouteSuggestions();
+                              }
+                            }}
                             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                               showAiRoute
                                 ? 'bg-green-500 text-white shadow-lg'
@@ -522,6 +544,7 @@ function App() {
                           onMLPrediction={handleMLPrediction}
                           onAdvancedOptimization={handleAdvancedOptimization}
                           showComparison={showComparison}
+                          autoFetch={false}
                         />
                       </div>
                     </motion.div>
@@ -532,11 +555,11 @@ function App() {
                 <AnimatePresence>
                   {showMLPanel && (origin && destination) && (
                     <motion.div
-                      initial={{ opacity: 0, x: 300 }}
+                      initial={{ opacity: 0, x: -100 }}
                       animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 300 }}
+                      exit={{ opacity: 0, x: -100 }}
                       transition={{ duration: 0.3 }}
-                      className="hidden lg:block absolute top-20 right-4 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-35"
+                      className="hidden lg:block fixed bottom-4 left-4 w-96 max-w-[calc(50vw-2rem)] h-[60vh] max-h-96 bg-white rounded-lg shadow-xl border border-gray-200 z-30"
                     >
                       <MLPredictionPanel
                         route={{
@@ -547,6 +570,7 @@ function App() {
                         onMLPrediction={handleMLPrediction}
                         onAdvancedOptimization={handleAdvancedOptimization}
                         showComparison={showComparison}
+                        autoFetch={false}
                       />
                     </motion.div>
                   )}
