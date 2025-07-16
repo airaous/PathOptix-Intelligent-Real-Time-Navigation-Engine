@@ -324,10 +324,13 @@ async def get_analytics():
     }
 
 if __name__ == "__main__":
+    # Use PORT environment variable for deployment platforms like Zeabur, Railway, Heroku
+    port = int(os.environ.get("PORT", 8000))
+    
     uvicorn.run(
-        "deeproute_api:app",
+        "deeproute_production_api:app",  # Fixed reference to current file
         host="0.0.0.0",
-        port=8000,
+        port=port,
         reload=False,  # Set to False for production
-        workers=4  # Scale based on CPU cores
+        workers=1  # Use 1 worker for serverless platforms
     )

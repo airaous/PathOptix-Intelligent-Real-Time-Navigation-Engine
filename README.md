@@ -205,33 +205,64 @@ const MODES = [
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
-1. **Push to GitHub**
+> **⚠️ Security First:** Before deploying, complete the security checklist in `SECURITY-CHECKLIST.md`
+
+PathOptix uses a **two-component architecture**:
+
+### 🎨 Frontend (React App)
+**Deploys to:** Static hosting (Vercel, Netlify, etc.)
+**Contains:** User interface, Google Maps integration, UI components
+
+### 🧠 Backend (FastAPI)
+**Deploys to:** Server hosting (Zeabur, Railway, Heroku, etc.)
+**Contains:** AI/ML predictions, route optimization, API endpoints
+
+### Quick Deploy (Recommended Setup)
+
+#### Current Configuration:
+- **Frontend:** Vercel → `https://your-app.vercel.app`
+- **Backend:** Zeabur → `https://deeproute-ai-api.zeabur.app` ✅ (Already deployed!)
+
+#### Deploy Frontend to Vercel:
+1. **Clean sensitive data:**
    ```bash
-   git add .
-   git commit -m "Initial commit"
+   git rm deeproute_ai_development.ipynb  # Remove notebook with API key
+   git commit -m "Security cleanup"
    git push origin main
    ```
 
-2. **Deploy to Vercel**
+2. **Deploy to Vercel:**
    - Visit [vercel.com](https://vercel.com)
    - Import your GitHub repository
    - Add environment variable: `VITE_GOOGLE_MAPS_API_KEY`
    - Deploy! 🚀
 
-### Other Platforms
-PathOptix can be deployed to any static hosting service:
-- **Netlify**: Drag and drop `dist` folder
-- **GitHub Pages**: Use GitHub Actions for automatic deployment
-- **Firebase Hosting**: Use Firebase CLI
-- **AWS S3**: Static website hosting
+3. **Verify deployment:**
+   - Frontend: `https://your-app.vercel.app`
+   - Backend: `https://deeproute-ai-api.zeabur.app` (already running)
+
+### Alternative Deployment Options
+
+#### Frontend Platforms:
+- **Vercel** (Recommended) - Zero config, automatic HTTPS, global CDN
+- **Netlify** - Drag and drop `dist` folder after `npm run build`
+- **GitHub Pages** - Use GitHub Actions for automatic deployment
+- **Firebase Hosting** - Use Firebase CLI
+
+#### Backend Platforms:
+- **Zeabur** (Current) - Python serverless hosting
+- **Railway** - Container hosting with auto-scaling  
+- **Heroku** - Platform as a Service
+- **DigitalOcean App Platform** - Managed platform
+- **AWS Lambda** - Serverless functions
 
 ### Build for Production
 ```bash
 npm run build
-# or
-yarn build
+# Creates optimized production build in `dist` folder
 ```
+
+📖 **Detailed Instructions:** See `DEPLOY-GUIDE.md` for step-by-step deployment guide
 
 The optimized production build will be in the `dist` folder.
 
