@@ -15,7 +15,13 @@
   to = "/index.html"
   status = 200
 
-# API proxy to backend
+# API proxy to backend (includes v2 endpoints)
+[[redirects]]
+  from = "/api/v2/*"
+  to = "https://pathoptix-backend-8080.zeabur.app/api/v2/:splat"
+  status = 200
+
+# API proxy to backend (legacy endpoints)
 [[redirects]]
   from = "/api/*"
   to = "https://pathoptix-backend-8080.zeabur.app/api/:splat"
