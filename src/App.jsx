@@ -62,12 +62,43 @@ function App() {
   // Error handling for missing API key
   useEffect(() => {
     if (!googleMapsApiKey || googleMapsApiKey === 'your_new_api_key_here') {
-      setError('Google Maps API key is not configured. Please add VITE_GOOGLE_MAPS_API_KEY to your .env.local file.');
+      setError('Google Maps API key is not configured. Please add VITE_GOOGLE_MAPS_API_KEY to your environment variables.');
     }
   }, [googleMapsApiKey]);
 
   // Demo mode when no valid API key
   const isDemoMode = !googleMapsApiKey || googleMapsApiKey === 'your_new_api_key_here';
+
+  // If no valid API key, show error page instead of trying to load Google Maps
+  if (isDemoMode) {
+    return (
+      <ErrorBoundary>
+        <div className="h-screen w-screen overflow-hidden bg-gray-100 flex items-center justify-center">
+          <div className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-4">
+            <div className="text-center">
+              <div className="text-6xl mb-4">🗺️</div>
+              <h1 className="text-2xl font-bold text-gray-800 mb-4">PathOptix Navigation</h1>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                <h2 className="text-lg font-semibold text-yellow-800 mb-2">⚠️ Configuration Required</h2>
+                <p className="text-yellow-700 text-sm">
+                  Google Maps API key is not configured. To use PathOptix:
+                </p>
+                <ol className="text-yellow-700 text-sm mt-2 text-left list-decimal list-inside space-y-1">
+                  <li>Get an API key from Google Cloud Console</li>
+                  <li>Set VITE_GOOGLE_MAPS_API_KEY environment variable</li>
+                  <li>Redeploy the application</li>
+                </ol>
+              </div>
+              <div className="text-gray-600 text-sm">
+                <p className="mb-2">🔗 <strong>Backend API:</strong> Connected</p>
+                <p>📍 <strong>Location:</strong> {window.location.href}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ErrorBoundary>
+    );
+  }
 
   // Handle script load
   const handleLoad = useCallback(() => {
