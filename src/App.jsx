@@ -82,27 +82,55 @@ function App() {
 
   // Get AI route suggestions
   const getAiRouteSuggestions = useCallback(async () => {
-    if (!origin || !destination) return;
+    console.log('🚀 AI: Starting AI route suggestions...');
+    console.log('🚀 AI: Origin:', origin);
+    console.log('🚀 AI: Destination:', destination);
+    console.log('🚀 AI: Travel Mode:', travelMode);
+    
+    if (!origin || !destination) {
+      console.error('❌ AI: Missing origin or destination');
+      alert('Please set both origin and destination before requesting AI predictions.');
+      return;
+    }
+
+    if (!directionsResult) {
+      console.error('❌ AI: No route calculated yet');
+      alert('Please calculate a route first before requesting AI predictions.');
+      return;
+    }
 
     try {
+      // Ensure proper data format
       const routeRequest = {
-        origin: { lat: origin.lat, lng: origin.lng },
-        destination: { lat: destination.lat, lng: destination.lng },
+        origin: { 
+          lat: typeof origin.lat === 'number' ? origin.lat : parseFloat(origin.lat),
+          lng: typeof origin.lng === 'number' ? origin.lng : parseFloat(origin.lng)
+        },
+        destination: { 
+          lat: typeof destination.lat === 'number' ? destination.lat : parseFloat(destination.lat),
+          lng: typeof destination.lng === 'number' ? destination.lng : parseFloat(destination.lng)
+        },
         waypoints: [],
         travel_mode: travelMode.toLowerCase(),
         avoid_tolls: false,
         avoid_highways: false
       };
 
-      // Get ML prediction
+      console.log('🚀 AI: Sending request:', routeRequest);
+
+      // Get ML prediction with detailed error handling
       const predictionResponse = await fetch('/api/v2/predict-route', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(routeRequest)
       });
 
+      console.log('🚀 AI: Response status:', predictionResponse.status);
+      console.log('🚀 AI: Response headers:', Object.fromEntries(predictionResponse.headers.entries()));
+
       if (predictionResponse.ok) {
         const prediction = await predictionResponse.json();
+        console.log('✅ AI: Prediction received:', prediction);
         
         // Get advanced optimization
         const optimizationResponse = await fetch('/api/v2/advanced-optimization', {
@@ -114,10 +142,13 @@ function App() {
         let optimization = null;
         if (optimizationResponse.ok) {
           optimization = await optimizationResponse.json();
+          console.log('✅ AI: Optimization received:', optimization);
+        } else {
+          console.warn('⚠️ AI: Optimization failed:', optimizationResponse.status);
         }
 
         // Create AI route data with recommendations
-        setAiRouteData({
+        const aiData = {
           prediction,
           optimization,
           route: {
@@ -127,17 +158,27 @@ function App() {
             efficiencyScore: prediction.efficiency_score,
             aiLabel: `AI Route (${Math.round(prediction.confidence * 100)}% confidence)`
           }
-        });
+        };
+
+        console.log('✅ AI: Setting AI route data:', aiData);
         
+        setAiRouteData(aiData);
         setShowAiRoute(true);
         handleMLPrediction(prediction);
         
         if (optimization) {
           handleAdvancedOptimization(optimization);
         }
+        
+        console.log('✅ AI: AI predictions completed successfully!');
+      } else {
+        const errorText = await predictionResponse.text();
+        console.error('❌ AI: Prediction request failed:', predictionResponse.status, errorText);
+        alert(`AI prediction failed: ${predictionResponse.status} - ${errorText}`);
       }
     } catch (error) {
-      console.error('Error getting AI route suggestions:', error);
+      console.error('❌ AI: Error getting AI route suggestions:', error);
+      alert(`AI prediction error: ${error.message}`);
     }
   }, [origin, destination, travelMode, directionsResult, handleMLPrediction, handleAdvancedOptimization]);
 
