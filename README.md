@@ -13,7 +13,7 @@
 
 *Built by [Ayra](https://github.com/airaous) & [Erebus](https://github.com/Erebuzzz)*
 
-[🌐 **Live Demo**](https://pathoptix-intelligent-real-time-nav.netlify.app/) • [🔗 **API Docs**](https://pathoptix-backend-8080.zeabur.app/docs) • [📋 **Documentation**](#-documentation)
+[🌐 **Live Demo**](https://pathoptix-intelligent-real-time-nav.netlify.app/) • [🔗 **API Docs**](https://pathoptix-backend-8080.zeabur.app/api/docs) • [📋 **Documentation**](#-documentation)
 
 </div>
 
@@ -576,7 +576,7 @@ We welcome contributions from the community! Here's how you can help:
 ### 🌐 **Live Deployments**
 - **📱 Frontend Application**: [https://pathoptix-intelligent-real-time-nav.netlify.app/](https://pathoptix-intelligent-real-time-nav.netlify.app/)
 - **🚀 Backend API**: [https://pathoptix-backend-8080.zeabur.app/](https://pathoptix-backend-8080.zeabur.app/)
-- **📚 API Documentation**: [https://pathoptix-backend-8080.zeabur.app/docs](https://pathoptix-backend-8080.zeabur.app/docs)
+- **📚 API Documentation**: [https://pathoptix-backend-8080.zeabur.app/api/docs](https://pathoptix-backend-8080.zeabur.app/api/docs)
 
 ### 👥 **Social & Professional**
 - **👨‍💻 Ayra's GitHub**: [https://github.com/airaous](https://github.com/airaous)
@@ -658,7 +658,7 @@ PathOptix was inspired by the need for **intelligent, AI-driven navigation** tha
 
 #### 📚 **Documentation**
 - **📖 This README**: Comprehensive guide with all functions and setup instructions
-- **🔗 API Documentation**: [Interactive API docs](https://pathoptix-backend-8080.zeabur.app/docs)
+- **🔗 API Documentation**: [Interactive API docs](https://pathoptix-backend-8080.zeabur.app/api/docs)
 - **🧠 Google Maps Docs**: [Official documentation](https://developers.google.com/maps/documentation)
 
 #### 💬 **Community Support**
@@ -687,7 +687,7 @@ PathOptix was inspired by the need for **intelligent, AI-driven navigation** tha
 
 **🧠 Intelligent • 📍 Real-Time • 🗺️ Optimized**
 
-[🌐 **Try PathOptix Live**](https://pathoptix-intelligent-real-time-nav.netlify.app/) • [🚀 **Explore API**](https://pathoptix-backend-8080.zeabur.app/docs) • [📧 **Contact Us**](mailto:contact@pathoptix.dev)
+[🌐 **Try PathOptix Live**](https://pathoptix-intelligent-real-time-nav.netlify.app/) • [🚀 **Explore API**](https://pathoptix-backend-8080.zeabur.app/api/docs) • [📧 **Contact Us**](mailto:contact@pathoptix.dev)
 
 *Making navigation smarter, one route at a time.* ✨
 
