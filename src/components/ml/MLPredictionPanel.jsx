@@ -24,7 +24,7 @@ const MLPredictionPanel = ({
     
     try {
       // Get basic ML prediction
-      const predictionResponse = await fetch('http://localhost:8000/predict-route', {
+      const predictionResponse = await fetch('/api/v2/predict-route', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -42,7 +42,7 @@ const MLPredictionPanel = ({
 
       // Get advanced optimization (fallback on error)
       try {
-        const optimizationResponse = await fetch('http://localhost:8000/api/v2/advanced-optimization', {
+        const optimizationResponse = await fetch('/api/v2/advanced-optimization', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -65,7 +65,7 @@ const MLPredictionPanel = ({
 
       // Get real-time adaptation (fallback on error)
       try {
-        const adaptationResponse = await fetch('http://localhost:8000/api/v2/real-time-adaptation', {
+        const adaptationResponse = await fetch('/api/v2/real-time-adaptation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
