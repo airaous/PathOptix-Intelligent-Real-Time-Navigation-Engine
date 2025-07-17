@@ -520,6 +520,7 @@ PathOptix-Intelligent-Real-Time-Navigation-Engine/
 | **Lead Developer & AI Architect** | **Frontend Developer & UX Designer** |
 | [🐙 GitHub](https://github.com/airaous) | [🐙 GitHub](https://github.com/Erebuzzz) |
 | [💼 LinkedIn](https://linkedin.com/in/ayraious) | [💼 LinkedIn](https://linkedin.com/in/kksinha23) |
+| [📧 Email](mailto:ayrawrk@gmail.com) | [📧 Email](mailto:kshitiz23kumar@gmail.com) |
 
 </div>
 
@@ -662,7 +663,7 @@ PathOptix was inspired by the need for **intelligent, AI-driven navigation** tha
 - **🧠 Google Maps Docs**: [Official documentation](https://developers.google.com/maps/documentation)
 
 #### 💬 **Community Support**
-- **📧 Email**: Contact the development team for direct support
+- **📧 Email**: [Contact the development team](mailto:ayrawrk@gmail.com)
 - **💼 LinkedIn**: Connect with [Ayra](https://linkedin.com/in/ayraious) or [Kshitiz](https://linkedin.com/in/kksinha23)
 - **🐙 GitHub**: Follow our repositories for updates and contributions
 
