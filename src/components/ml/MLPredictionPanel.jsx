@@ -62,8 +62,20 @@ const MLPredictionPanel = ({
         if (optimizationResponse.ok) {
           const optimization = await optimizationResponse.json();
           console.log('✅ MLPanel: Optimization received:', optimization);
-          setAdvancedOptimization(optimization);
-          onAdvancedOptimization?.(optimization);
+          
+          // Extract data from the nested backend response structure
+          const processedOptimization = {
+            optimized_duration: optimization.base_prediction?.estimated_duration || 0,
+            optimized_distance: optimization.base_prediction?.estimated_distance || 0,
+            fuel_savings: ((optimization.optimization_analysis?.multi_modal_analysis?.driving?.environmental_impact || 0) * 0.08).toFixed(2),
+            cost_savings: optimization.optimization_analysis?.multi_modal_analysis?.driving?.cost || 0,
+            efficiency_metrics: optimization.optimization_analysis?.efficiency_metrics || {},
+            strategies: optimization.optimization_analysis?.optimization_strategies || [],
+            confidence: optimization.confidence || 0
+          };
+          
+          setAdvancedOptimization(processedOptimization);
+          onAdvancedOptimization?.(processedOptimization);
         } else {
           console.warn('⚠️ MLPanel: Optimization failed:', optimizationResponse.status);
         }
@@ -268,12 +280,12 @@ const MLPredictionPanel = ({
               <h4 className="text-xs font-semibold text-gray-800 mb-2">
                 🚀 Optimization Results
               </h4>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2 mb-3">
                 {/* Optimized Duration */}
                 <div className="bg-blue-50 rounded-lg p-2 text-center">
                   <div className="text-xs text-gray-600 mb-1">Duration</div>
                   <div className="text-xs font-bold text-gray-800">
-                    {Math.round(advancedOptimization.optimized_duration / 60)} min
+                    {Math.round((advancedOptimization.optimized_duration || 0) / 60)} min
                   </div>
                 </div>
 
@@ -291,18 +303,46 @@ const MLPredictionPanel = ({
                 <div className="bg-yellow-50 rounded-lg p-2 text-center">
                   <div className="text-xs text-gray-600 mb-1">Fuel Saved</div>
                   <div className="text-xs font-bold text-gray-800">
-                    {advancedOptimization?.fuel_savings?.toFixed(2) || '0.00'} L
+                    {advancedOptimization?.fuel_savings || '0.00'} L
                   </div>
                 </div>
 
                 {/* Cost Savings */}
                 <div className="bg-purple-50 rounded-lg p-2 text-center">
-                  <div className="text-xs text-gray-600 mb-1">Cost Saved</div>
+                  <div className="text-xs text-gray-600 mb-1">Cost</div>
                   <div className="text-xs font-bold text-gray-800">
-                    ${advancedOptimization?.cost_savings?.toFixed(2) || '0.00'}
+                    ${(advancedOptimization?.cost_savings || 0).toFixed(2)}
                   </div>
                 </div>
               </div>
+
+              {/* Optimization Strategies */}
+              {advancedOptimization?.strategies && advancedOptimization.strategies.length > 0 && (
+                <div className="bg-blue-50 rounded-lg p-2">
+                  <div className="text-xs font-medium text-blue-800 mb-1">💡 Smart Recommendations</div>
+                  <div className="space-y-1">
+                    {advancedOptimization.strategies.slice(0, 3).map((strategy, index) => (
+                      <div key={index} className="text-xs text-blue-700">
+                        • {strategy}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Efficiency Metrics */}
+              {advancedOptimization?.efficiency_metrics && (
+                <div className="bg-green-50 rounded-lg p-2">
+                  <div className="text-xs font-medium text-green-800 mb-1">📊 Efficiency Scores</div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {Object.entries(advancedOptimization.efficiency_metrics).map(([key, value]) => (
+                      <div key={key} className="text-xs text-green-700">
+                        {key.replace('_', ' ')}: {(value * 100).toFixed(0)}%
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
