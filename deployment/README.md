@@ -1,53 +1,52 @@
 # 🚀 Frontend Deployment Configuration
 
-This folder contains all the necessary files and documentation for deploying the PathOptix frontend to Vercel.
+This folder contains all the necessary files and documentation for deploying the PathOptix frontend to Netlify.
 
 ## 📁 Folder Contents
 
 ### Configuration Files
-- `vercel.json` - Vercel deployment configuration with API proxy (also in root directory)
+- `netlify.toml` - Netlify deployment configuration with API proxy and SPA routing (located in root directory)
 - `.env.example` - Environment variables template for production
 
 ### Documentation
-- `COMPLETE-DEPLOYMENT-GUIDE.md` - Complete step-by-step deployment guide
-- `SECURITY-CHECKLIST.md` - Security best practices and checklist
-- `VERCEL-SETUP.md` - Quick Vercel-specific setup instructions
+- `NETLIFY-DEPLOYMENT.md` - Complete step-by-step Netlify deployment guide
+- `DEPLOYMENT-STATUS.md` - Real-time deployment status and health checks
+- `NETLIFY-TROUBLESHOOTING.md` - Troubleshooting guide for deployment issues
 
-**Note**: `vercel.json` is also copied to the root directory as Vercel requires it there for deployment.
+**Note**: `netlify.toml` is located in the root directory as Netlify requires it there for deployment.
 
 ## 🔧 Quick Setup
 
 ### 1. Environment Variables
 Copy `.env.example` and set your actual values:
 ```bash
-VITE_GOOGLE_MAPS_API_KEY=your_actual_google_maps_api_key
+VITE_GOOGLE_MAPS_API_KEY=AIzaSyAvaO9ui4INjFE7JQfOxfX8P_bBrEv9R5I
 VITE_API_BASE_URL=https://pathoptix-backend-8080.zeabur.app
+VITE_ENVIRONMENT=production
 ```
 
-### 2. Deploy to Vercel
-1. Import project from GitHub
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically
+### 2. Deploy to Netlify
+1. Go to https://netlify.com and connect GitHub
+2. Import PathOptix repository 
+3. Set environment variables in Netlify dashboard
+4. Deploy automatically
 
 ### 3. Update Backend URL
-Edit `vercel.json` if your backend URL changes:
-```json
-{
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "https://your-new-backend-url.zeabur.app/api/$1"
-    }
-  ]
-}
+Edit `netlify.toml` if your backend URL changes:
+```toml
+[[redirects]]
+  from = "/api/*"
+  to = "https://your-new-backend-url.zeabur.app/api/:splat"
+  status = 200
 ```
 
 ## 🔗 Current Configuration
 
 - **Backend URL**: `https://pathoptix-backend-8080.zeabur.app`
-- **API Proxy**: All `/api/*` requests forwarded to backend
+- **API Proxy**: All `/api/*` requests forwarded to backend via redirects
 - **Build Command**: `npm run build`
 - **Output Directory**: `dist`
+- **SPA Routing**: Automatic with 200 status redirects
 
 ## 📖 Full Documentation
 

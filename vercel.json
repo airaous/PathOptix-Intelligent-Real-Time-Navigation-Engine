@@ -1,9 +1,0 @@
-
-{
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://pathoptix-backend-8080.zeabur.app/api/$1"
-    }
-  ]
-}
