@@ -67,7 +67,15 @@ const MLPredictionPanel = ({
           const processedOptimization = {
             optimized_duration: optimization.base_prediction?.estimated_duration || 0,
             optimized_distance: optimization.base_prediction?.estimated_distance || 0,
-            fuel_savings: ((optimization.optimization_analysis?.multi_modal_analysis?.driving?.environmental_impact || 0) * 0.08).toFixed(2),
+            fuel_savings: (() => {
+              // Calculate realistic fuel savings based on distance and efficiency improvement
+              const distanceKm = (optimization.base_prediction?.estimated_distance || 0) / 1000;
+              const avgFuelConsumption = 8.5; // L/100km average car consumption
+              const efficiencyImprovement = (optimization.optimization_analysis?.efficiency_metrics?.fuel_efficiency || 0.1); // Use actual efficiency from backend
+              const totalFuelUsed = (distanceKm * avgFuelConsumption) / 100;
+              const fuelSaved = totalFuelUsed * (efficiencyImprovement * 0.2); // 20% of efficiency improvement as savings
+              return Math.max(0, fuelSaved).toFixed(2);
+            })(),
             cost_savings: optimization.optimization_analysis?.multi_modal_analysis?.driving?.cost || 0,
             efficiency_metrics: optimization.optimization_analysis?.efficiency_metrics || {},
             strategies: optimization.optimization_analysis?.optimization_strategies || [],
