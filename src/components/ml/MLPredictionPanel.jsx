@@ -27,7 +27,7 @@ const MLPredictionPanel = ({
       const requestPayload = {
         origin: route.origin,
         destination: route.destination,
-        travel_mode: route.travelMode || 'driving'
+        travel_mode: (route.travelMode || 'driving').toLowerCase()
       };
 
       console.log('🧠 MLPanel: Sending prediction request:', requestPayload);
