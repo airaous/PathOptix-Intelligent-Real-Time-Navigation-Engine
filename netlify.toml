@@ -9,13 +9,7 @@
   VITE_ENVIRONMENT = "production"
   NODE_VERSION = "18"
 
-# Redirect all routes to index.html for SPA
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-# API proxy to backend (includes v2 endpoints)
+# API proxy to backend (v2 endpoints) - MUST COME FIRST
 [[redirects]]
   from = "/api/v2/*"
   to = "https://pathoptix-backend-8080.zeabur.app/api/v2/:splat"
@@ -25,6 +19,12 @@
 [[redirects]]
   from = "/api/*"
   to = "https://pathoptix-backend-8080.zeabur.app/api/:splat"
+  status = 200
+
+# Redirect all routes to index.html for SPA (MUST COME LAST)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
 
 # Security headers

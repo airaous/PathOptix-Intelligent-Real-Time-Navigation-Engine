@@ -7,7 +7,7 @@ This test verifies if the frontend can successfully connect to the AI backend fe
 Copy and paste this code in your browser console when the PathOptix app is loaded:
 
 ```javascript
-// Test AI Backend Connection
+// Test AI Backend Connection with detailed debugging
 async function testAIBackend() {
   console.log('🧪 Testing AI Backend Connection...');
   
@@ -22,13 +22,21 @@ async function testAIBackend() {
   try {
     console.log('1️⃣ Testing Health Endpoint...');
     const healthResponse = await fetch('/api/health');
-    const healthData = await healthResponse.json();
-    console.log('✅ Health Check:', healthData);
+    console.log('Health Response Status:', healthResponse.status);
+    console.log('Health Response Headers:', [...healthResponse.headers.entries()]);
+    
+    if (healthResponse.ok) {
+      const healthData = await healthResponse.json();
+      console.log('✅ Health Check:', healthData);
+    } else {
+      const healthText = await healthResponse.text();
+      console.log('❌ Health Response Body:', healthText.substring(0, 200));
+    }
   } catch (error) {
     console.error('❌ Health Check Failed:', error);
   }
 
-  // Test 2: ML Prediction
+  // Test 2: ML Prediction with detailed error info
   try {
     console.log('2️⃣ Testing ML Prediction...');
     const predictionResponse = await fetch('/api/v2/predict-route', {
@@ -37,6 +45,10 @@ async function testAIBackend() {
       body: JSON.stringify(testRoute)
     });
     
+    console.log('ML Prediction Status:', predictionResponse.status);
+    console.log('ML Prediction URL:', predictionResponse.url);
+    console.log('ML Prediction Headers:', [...predictionResponse.headers.entries()]);
+    
     if (predictionResponse.ok) {
       const predictionData = await predictionResponse.json();
       console.log('✅ ML Prediction:', predictionData);
@@ -44,54 +56,25 @@ async function testAIBackend() {
       console.log(`⏱️ Duration: ${predictionData.estimated_duration.toFixed(1)}s`);
       console.log(`📏 Distance: ${predictionData.estimated_distance.toFixed(1)}m`);
     } else {
+      const responseText = await predictionResponse.text();
       console.error('❌ ML Prediction Failed:', predictionResponse.status, predictionResponse.statusText);
+      console.error('Response Body:', responseText.substring(0, 500));
+      
+      // Check if we're getting HTML instead of JSON (redirect issue)
+      if (responseText.includes('<html>') || responseText.includes('<!DOCTYPE')) {
+        console.error('� ISSUE: Getting HTML instead of JSON - Check netlify.toml redirect order!');
+        console.error('The SPA redirect (/*) might be catching API calls before API redirects');
+      }
     }
   } catch (error) {
     console.error('❌ ML Prediction Error:', error);
   }
 
-  // Test 3: Route Optimization
-  try {
-    console.log('3️⃣ Testing Route Optimization...');
-    const optimizationResponse = await fetch('/api/v2/optimize-route', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(testRoute)
-    });
-    
-    if (optimizationResponse.ok) {
-      const optimizationData = await optimizationResponse.json();
-      console.log('✅ Route Optimization:', optimizationData);
-      console.log(`🚦 Traffic: ${optimizationData.optimization.traffic_analysis.current_congestion.toFixed(2)}`);
-      console.log(`💰 Fuel Cost: ${optimizationData.optimization.cost_analysis.fuel_cost}`);
-    } else {
-      console.error('❌ Route Optimization Failed:', optimizationResponse.status, optimizationResponse.statusText);
-    }
-  } catch (error) {
-    console.error('❌ Route Optimization Error:', error);
-  }
-
-  // Test 4: Real-time Adaptation
-  try {
-    console.log('4️⃣ Testing Real-time Adaptation...');
-    const adaptationResponse = await fetch('/api/v2/real-time-adaptation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(testRoute)
-    });
-    
-    if (adaptationResponse.ok) {
-      const adaptationData = await adaptationResponse.json();
-      console.log('✅ Real-time Adaptation:', adaptationData);
-      console.log(`⚡ Adaptation: ${adaptationData.adapted_prediction.real_time_factors.dynamic_routing.time_savings}`);
-    } else {
-      console.error('❌ Real-time Adaptation Failed:', adaptationResponse.status, adaptationResponse.statusText);
-    }
-  } catch (error) {
-    console.error('❌ Real-time Adaptation Error:', error);
-  }
-
   console.log('🏁 AI Backend Test Complete!');
+  console.log('📋 Debugging Info:');
+  console.log('- Current URL:', window.location.href);
+  console.log('- Environment:', import.meta?.env?.VITE_ENVIRONMENT || 'unknown');
+  console.log('- Backend URL:', import.meta?.env?.VITE_API_BASE_URL || 'unknown');
 }
 
 // Run the test

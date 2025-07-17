@@ -184,6 +184,37 @@ NOT:
 Installing pip dependencies from requirements.txt... ❌
 ```
 
+### **"404 on /api/v2/ endpoints" Error**
+**Problem**: API redirects not working due to wrong order in `netlify.toml`
+**Solution**: ✅ Fixed by ensuring API redirects come **before** SPA redirect:
+
+```toml
+# ✅ CORRECT ORDER:
+# 1. API v2 endpoints first (most specific)
+[[redirects]]
+  from = "/api/v2/*"
+  to = "https://pathoptix-backend-8080.zeabur.app/api/v2/:splat"
+  status = 200
+
+# 2. General API endpoints second
+[[redirects]]
+  from = "/api/*"
+  to = "https://pathoptix-backend-8080.zeabur.app/api/:splat"
+  status = 200
+
+# 3. SPA redirect LAST (catch-all)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+**Why Order Matters**: Netlify processes redirects from top to bottom. If `/*` comes first, it catches ALL requests (including API calls) and sends them to `index.html` instead of the backend.
+
+**Test Fix**: After redeployment, check browser Network tab:
+- ✅ `/api/v2/predict-route` should return JSON data
+- ❌ Should NOT return HTML from `index.html`
+
 ## 🚨 **Migration from Vercel**
 
 ### **What Changes**
