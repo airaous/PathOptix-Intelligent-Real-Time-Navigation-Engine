@@ -517,7 +517,7 @@ PathOptix-Intelligent-Real-Time-Navigation-Engine/
 | **👨‍💻 Ayra** | **👨‍💻 Erebus** |
 |:---:|:---:|
 | [![Ayra](https://github.com/airaous.png?size=100)](https://github.com/airaous) | [![Erebus](https://github.com/Erebuzzz.png?size=100)](https://github.com/Erebuzzz) |
-| **Lead Developer & AI Architect** | **Frontend Developer & UX Designer** |
+| **Lead Developer & AI Architect** | **Frontend Developer, UX Designer & ML  Engineer** |
 | [🐙 GitHub](https://github.com/airaous) | [🐙 GitHub](https://github.com/Erebuzzz) |
 | [💼 LinkedIn](https://linkedin.com/in/ayraious) | [💼 LinkedIn](https://linkedin.com/in/kksinha23) |
 | [📧 Email](mailto:ayrawrk@gmail.com) | [📧 Email](mailto:kshitiz23kumar@gmail.com) |
