@@ -133,7 +133,7 @@ function App() {
         return;
       }
 
-      // Ensure proper data format - force number conversion
+      // Create simplified request payload that matches working backend format
       const routeRequest = {
         origin: { 
           lat: Number(originLat),
@@ -143,10 +143,7 @@ function App() {
           lat: Number(destLat),
           lng: Number(destLng)
         },
-        waypoints: [],
-        travel_mode: String(travelMode).toLowerCase(),
-        avoid_tolls: false,
-        avoid_highways: false
+        travel_mode: String(travelMode).toLowerCase()
       };
 
       console.log('🚀 AI: Final request payload:', JSON.stringify(routeRequest, null, 2));
