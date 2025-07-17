@@ -20,7 +20,7 @@ This folder contains all the necessary files and documentation for deploying the
 ### 1. Environment Variables
 Copy `.env.example` and set your actual values:
 ```bash
-VITE_GOOGLE_MAPS_API_KEY=AIzaSyAvaO9ui4INjFE7JQfOxfX8P_bBrEv9R5I
+VITE_GOOGLE_MAPS_API_KEY=google-maps-api-key
 VITE_API_BASE_URL=https://pathoptix-backend-8080.zeabur.app
 VITE_ENVIRONMENT=production
 ```
