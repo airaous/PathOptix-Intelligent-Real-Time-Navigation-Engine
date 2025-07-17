@@ -100,23 +100,56 @@ function App() {
     }
 
     try {
-      // Ensure proper data format
+      // Extract and validate coordinates with comprehensive checking
+      const originLat = origin.lat;
+      const originLng = origin.lng;
+      const destLat = destination.lat;
+      const destLng = destination.lng;
+      
+      console.log('🚀 AI: Raw coordinates:', {
+        originLat, originLng, destLat, destLng,
+        originLatType: typeof originLat,
+        originLngType: typeof originLng,
+        destLatType: typeof destLat,
+        destLngType: typeof destLng
+      });
+
+      // Validate coordinates are valid numbers
+      if (isNaN(originLat) || isNaN(originLng) || isNaN(destLat) || isNaN(destLng)) {
+        console.error('❌ AI: Invalid coordinates - NaN detected');
+        alert('Invalid coordinates detected. Please set locations again.');
+        return;
+      }
+
+      if (originLat < -90 || originLat > 90 || destLat < -90 || destLat > 90) {
+        console.error('❌ AI: Invalid latitude range');
+        alert('Invalid latitude values. Must be between -90 and 90.');
+        return;
+      }
+
+      if (originLng < -180 || originLng > 180 || destLng < -180 || destLng > 180) {
+        console.error('❌ AI: Invalid longitude range');
+        alert('Invalid longitude values. Must be between -180 and 180.');
+        return;
+      }
+
+      // Ensure proper data format - force number conversion
       const routeRequest = {
         origin: { 
-          lat: typeof origin.lat === 'number' ? origin.lat : parseFloat(origin.lat),
-          lng: typeof origin.lng === 'number' ? origin.lng : parseFloat(origin.lng)
+          lat: Number(originLat),
+          lng: Number(originLng)
         },
         destination: { 
-          lat: typeof destination.lat === 'number' ? destination.lat : parseFloat(destination.lat),
-          lng: typeof destination.lng === 'number' ? destination.lng : parseFloat(destination.lng)
+          lat: Number(destLat),
+          lng: Number(destLng)
         },
         waypoints: [],
-        travel_mode: travelMode.toLowerCase(),
+        travel_mode: String(travelMode).toLowerCase(),
         avoid_tolls: false,
         avoid_highways: false
       };
 
-      console.log('🚀 AI: Sending request:', routeRequest);
+      console.log('🚀 AI: Final request payload:', JSON.stringify(routeRequest, null, 2));
 
       // Get ML prediction with detailed error handling
       const predictionResponse = await fetch('/api/v2/predict-route', {
@@ -174,7 +207,21 @@ function App() {
       } else {
         const errorText = await predictionResponse.text();
         console.error('❌ AI: Prediction request failed:', predictionResponse.status, errorText);
-        alert(`AI prediction failed: ${predictionResponse.status} - ${errorText}`);
+        
+        // Try to parse error details for 422 responses
+        let errorDetails = errorText;
+        try {
+          const errorJson = JSON.parse(errorText);
+          if (errorJson.detail) {
+            errorDetails = Array.isArray(errorJson.detail) 
+              ? errorJson.detail.map(d => `${d.loc?.join('.')} : ${d.msg}`).join(', ')
+              : errorJson.detail;
+          }
+        } catch (e) {
+          // Keep original error text if parsing fails
+        }
+        
+        alert(`AI prediction failed (${predictionResponse.status}): ${errorDetails}`);
       }
     } catch (error) {
       console.error('❌ AI: Error getting AI route suggestions:', error);
