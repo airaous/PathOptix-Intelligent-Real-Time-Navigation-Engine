@@ -23,40 +23,49 @@ const MLPredictionPanel = ({
     setError(null);
     
     try {
+      // Create simplified request payload that matches working backend format
+      const requestPayload = {
+        origin: route.origin,
+        destination: route.destination,
+        travel_mode: route.travelMode || 'driving'
+      };
+
+      console.log('🧠 MLPanel: Sending prediction request:', requestPayload);
+
       // Get basic ML prediction
       const predictionResponse = await fetch('/api/v2/predict-route', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          origin: route.origin,
-          destination: route.destination,
-          waypoints: route.waypoints || [],
-          travel_mode: route.travelMode || 'driving'
-        })
+        body: JSON.stringify(requestPayload)
       });
       
-      if (!predictionResponse.ok) throw new Error('Prediction failed');
+      if (!predictionResponse.ok) {
+        const errorText = await predictionResponse.text();
+        console.error('🧠 MLPanel: Prediction failed:', predictionResponse.status, errorText);
+        throw new Error(`Prediction failed: ${predictionResponse.status}`);
+      }
+      
       const prediction = await predictionResponse.json();
+      console.log('✅ MLPanel: Prediction received:', prediction);
       setMLPrediction(prediction);
       onMLPrediction?.(prediction);
 
       // Get advanced optimization (fallback on error)
       try {
+        console.log('🧠 MLPanel: Sending optimization request:', requestPayload);
         const optimizationResponse = await fetch('/api/v2/advanced-optimization', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            origin: route.origin,
-            destination: route.destination,
-            waypoints: route.waypoints || [],
-            travel_mode: route.travelMode || 'driving'
-          })
+          body: JSON.stringify(requestPayload)
         });
         
         if (optimizationResponse.ok) {
           const optimization = await optimizationResponse.json();
+          console.log('✅ MLPanel: Optimization received:', optimization);
           setAdvancedOptimization(optimization);
           onAdvancedOptimization?.(optimization);
+        } else {
+          console.warn('⚠️ MLPanel: Optimization failed:', optimizationResponse.status);
         }
       } catch (optError) {
         // Advanced optimization not available - fail silently
@@ -65,20 +74,19 @@ const MLPredictionPanel = ({
 
       // Get real-time adaptation (fallback on error)
       try {
+        console.log('🧠 MLPanel: Sending adaptation request:', requestPayload);
         const adaptationResponse = await fetch('/api/v2/real-time-adaptation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            origin: route.origin,
-            destination: route.destination,
-            waypoints: route.waypoints || [],
-            travel_mode: route.travelMode || 'driving'
-          })
+          body: JSON.stringify(requestPayload)
         });
         
         if (adaptationResponse.ok) {
           const adaptation = await adaptationResponse.json();
+          console.log('✅ MLPanel: Adaptation received:', adaptation);
           setRealTimeAdaptation(adaptation);
+        } else {
+          console.warn('⚠️ MLPanel: Adaptation failed:', adaptationResponse.status);
         }
       } catch (adaptError) {
         // Real-time adaptation not available - fail silently
