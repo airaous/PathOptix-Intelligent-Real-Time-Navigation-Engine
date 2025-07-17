@@ -59,47 +59,6 @@ function App() {
   // Get API key from environment
   const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-  // Error handling for missing API key
-  useEffect(() => {
-    if (!googleMapsApiKey || googleMapsApiKey === 'your_new_api_key_here') {
-      setError('Google Maps API key is not configured. Please add VITE_GOOGLE_MAPS_API_KEY to your environment variables.');
-    }
-  }, [googleMapsApiKey]);
-
-  // Demo mode when no valid API key
-  const isDemoMode = !googleMapsApiKey || googleMapsApiKey === 'your_new_api_key_here';
-
-  // If no valid API key, show error page instead of trying to load Google Maps
-  if (isDemoMode) {
-    return (
-      <ErrorBoundary>
-        <div className="h-screen w-screen overflow-hidden bg-gray-100 flex items-center justify-center">
-          <div className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-4">
-            <div className="text-center">
-              <div className="text-6xl mb-4">🗺️</div>
-              <h1 className="text-2xl font-bold text-gray-800 mb-4">PathOptix Navigation</h1>
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h2 className="text-lg font-semibold text-yellow-800 mb-2">⚠️ Configuration Required</h2>
-                <p className="text-yellow-700 text-sm">
-                  Google Maps API key is not configured. To use PathOptix:
-                </p>
-                <ol className="text-yellow-700 text-sm mt-2 text-left list-decimal list-inside space-y-1">
-                  <li>Get an API key from Google Cloud Console</li>
-                  <li>Set VITE_GOOGLE_MAPS_API_KEY environment variable</li>
-                  <li>Redeploy the application</li>
-                </ol>
-              </div>
-              <div className="text-gray-600 text-sm">
-                <p className="mb-2">🔗 <strong>Backend API:</strong> Connected</p>
-                <p>📍 <strong>Location:</strong> {window.location.href}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ErrorBoundary>
-    );
-  }
-
   // Handle script load
   const handleLoad = useCallback(() => {
     setIsLoaded(true);
@@ -277,68 +236,6 @@ function App() {
   const handleFeatureToggle = useCallback((featureName, enabled) => {
     setAdvancedFeatures(prev => ({ ...prev, [featureName]: enabled }));
   }, []);
-
-  // Show loading screen if API key is missing
-  if (isDemoMode) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="text-center max-w-3xl">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">🗝️ Google Maps API Key Required</h1>
-          <p className="text-gray-600 mb-6 text-lg">
-            PathOptix needs a valid Google Maps API key to provide navigation services.
-          </p>
-          
-          <div className="bg-white rounded-xl p-6 shadow-lg text-left mb-6">
-            <h3 className="font-semibold text-gray-800 mb-4 text-lg">📝 Quick Setup Guide:</h3>
-            <ol className="space-y-3 text-gray-600">
-              <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1 font-medium">1</span>
-                <div>
-                  Go to <a href="https://console.cloud.google.com/google/maps-apis" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-medium">Google Cloud Console</a>
-                  <div className="text-sm text-gray-500 mt-1">Create a new project and enable billing (required for Maps APIs)</div>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1 font-medium">2</span>
-                <div>
-                  Enable Required APIs:
-                  <div className="text-sm text-gray-500 mt-1">• Maps JavaScript API • Places API • Directions API</div>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1 font-medium">3</span>
-                <div>
-                  Create API Key in "Credentials"
-                  <div className="text-sm text-gray-500 mt-1">Configure restrictions for localhost:3000</div>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1 font-medium">4</span>
-                <div>
-                  Update your <code className="bg-gray-100 px-2 py-1 rounded text-sm">.env.local</code> file
-                </div>
-              </li>
-            </ol>
-          </div>
-
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left mb-4">
-            <p className="text-sm text-yellow-800">
-              <strong>📝 Edit .env.local file:</strong><br />
-              <code className="bg-yellow-100 px-3 py-2 rounded mt-2 block text-sm font-mono">
-                VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key_here
-              </code>
-            </p>
-          </div>
-
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-left">
-            <p className="text-sm text-green-800">
-              💡 <strong>Free Tier Available:</strong> Google provides $200/month free credit for Maps APIs - perfect for development!
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <ErrorBoundary>

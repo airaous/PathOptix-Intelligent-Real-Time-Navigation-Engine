@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import TestApp from './TestApp.jsx'
 import './index.css'
 
 // Suppress common browser extension and Google Maps deprecation warnings

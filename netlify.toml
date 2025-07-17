@@ -4,6 +4,7 @@
   command = "npm run build"
 
 [build.environment]
+  VITE_GOOGLE_MAPS_API_KEY = "AIzaSyAvaO9ui4INjFE7JQfOxfX8P_bBrEv9R5I"
   VITE_API_BASE_URL = "https://pathoptix-backend-8080.zeabur.app"
   VITE_ENVIRONMENT = "production"
 
