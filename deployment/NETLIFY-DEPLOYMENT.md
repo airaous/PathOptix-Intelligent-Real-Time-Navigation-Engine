@@ -17,7 +17,7 @@
 - Node.js version specification
 
 ### **.netlifyignore** ✅ Created
-- Ignores Python backend files (deployed separately to Zeabur)
+- Ignores `backend/` directory (Python files deployed separately to Zeabur)
 - Prevents Netlify from detecting this as a Python project
 - Focuses build on frontend React app only
 
@@ -161,10 +161,11 @@ fetch('/api/health')
 
 ### **"torch==2.1.0 not found" Error**
 **Problem**: Netlify tries to install Python dependencies instead of Node.js
-**Solution**: ✅ Fixed with `.netlifyignore` file that excludes:
-- `requirements.txt` (Python backend dependencies)
-- `*.py` files (Backend code deployed to Zeabur)
-- `Dockerfile` (Backend container config)
+**Solution**: ✅ Fixed by moving Python files to `backend/` directory:
+- `backend/requirements.txt` (Python backend dependencies)
+- `backend/*.py` files (Backend code deployed to Zeabur)
+- `backend/Dockerfile` (Backend container config)
+- `.netlifyignore` excludes entire `backend/` directory
 
 **Verification**: Build should only show:
 ```

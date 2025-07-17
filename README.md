@@ -148,26 +148,45 @@ VITE_GOOGLE_MAPS_API_KEY=your_actual_google_maps_api_key_here
 
 ```
 PathOptix/
+├── backend/                    # 🐍 Python FastAPI backend (deployed to Zeabur)
+│   ├── deeproute_production_api.py # Main API with ML route optimization
+│   ├── requirements.txt        # Python dependencies
+│   ├── Dockerfile             # Container configuration
+│   └── README.md              # Backend documentation
+├── deployment/                 # 🚀 Deployment configurations and guides
+│   ├── netlify.toml           # Netlify configuration
+│   ├── NETLIFY-DEPLOYMENT.md  # Netlify deployment guide
+│   └── DEPLOYMENT-STATUS.md   # Current deployment status
 ├── public/
-│   ├── pathoptix-icon.svg      # App icon
-│   └── index.html              # HTML template
-├── src/
+│   ├── pathoptix-icon.svg     # App icon
+│   └── index.html             # HTML template
+├── src/                       # 🌐 React frontend (deployed to Netlify)
 │   ├── components/
-│   │   ├── MapView.jsx         # Main map component
+│   │   ├── MapView.jsx        # Main map component
 │   │   ├── AutocompleteInput.jsx # Search input with autocomplete
-│   │   ├── ModeSelector.jsx    # Travel mode selection
-│   │   ├── RoutePanel.jsx      # Route details sidebar
-│   │   ├── Header.jsx          # App header
-│   │   ├── LoadingScreen.jsx   # Loading animation
-│   │   └── ErrorBoundary.jsx   # Error handling
-│   ├── App.jsx                 # Main application component
-│   ├── main.jsx               # React entry point
-│   └── index.css              # Global styles and Tailwind
-├── .env.example               # Environment variables template
-├── package.json               # Dependencies and scripts
-├── tailwind.config.js         # Tailwind CSS configuration
-├── vite.config.js            # Vite build configuration
-└── README.md                 # This file
+│   │   ├── ModeSelector.jsx   # Travel mode selection
+│   │   ├── RoutePanel.jsx     # Route details sidebar
+│   │   ├── Header.jsx         # App header
+│   │   ├── LoadingScreen.jsx  # Loading animation
+│   │   └── ErrorBoundary.jsx  # Error handling
+│   ├── App.jsx                # Main application component
+│   ├── main.jsx              # React entry point
+│   └── index.css             # Global styles and Tailwind
+├── .netlifyignore            # Files ignored by Netlify builds
+├── .nvmrc                    # Node.js version for Netlify
+├── netlify.toml              # Netlify build configuration
+├── .env.example              # Environment variables template
+├── package.json              # Frontend dependencies and scripts
+├── tailwind.config.js        # Tailwind CSS configuration
+├── vite.config.js           # Vite build configuration
+└── README.md                # This file
+```
+
+### 🏢 **Deployment Architecture**
+```
+Frontend (Netlify) ──API calls──► Backend (Zeabur)
+    React + Vite                    FastAPI + ML
+    Google Maps                     Route Optimization
 ```
 
 ## 🎨 Customization
