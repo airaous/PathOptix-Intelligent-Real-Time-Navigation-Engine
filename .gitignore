@@ -86,3 +86,4 @@ jupyter_checkpoints/
 *.bak
 *.backup
 *.orig
+.vercel
