@@ -14,6 +14,16 @@
 - SPA routing support
 - API proxy to Zeabur backend
 - Security headers and caching
+- Node.js version specification
+
+### **.netlifyignore** ✅ Created
+- Ignores Python backend files (deployed separately to Zeabur)
+- Prevents Netlify from detecting this as a Python project
+- Focuses build on frontend React app only
+
+### **.nvmrc** ✅ Created
+- Specifies Node.js version 18.17.0
+- Ensures consistent build environment
 
 ## 🔧 **Deployment Steps**
 
@@ -145,6 +155,26 @@ fetch('/api/health')
   .then(r => r.json())
   .then(console.log);
 // Should return: {"status": "healthy"}
+```
+
+## 🚨 **Common Build Issues**
+
+### **"torch==2.1.0 not found" Error**
+**Problem**: Netlify tries to install Python dependencies instead of Node.js
+**Solution**: ✅ Fixed with `.netlifyignore` file that excludes:
+- `requirements.txt` (Python backend dependencies)
+- `*.py` files (Backend code deployed to Zeabur)
+- `Dockerfile` (Backend container config)
+
+**Verification**: Build should only show:
+```
+Installing npm dependencies...
+Running npm run build...
+```
+
+NOT:
+```
+Installing pip dependencies from requirements.txt... ❌
 ```
 
 ## 🚨 **Migration from Vercel**
