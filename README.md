@@ -683,8 +683,6 @@ PathOptix was inspired by the need for **intelligent, AI-driven navigation** tha
 
 ---
 
-### 🚀 **Built with ❤️ by the PathOptix Team**
-
 **🧠 Intelligent • 📍 Real-Time • 🗺️ Optimized**
 
 [🌐 **Try PathOptix Live**](https://pathoptix-intelligent-real-time-nav.netlify.app/) • [🚀 **Explore API**](https://pathoptix-backend-8080.zeabur.app/api/docs) • [📧 **Contact Us**](mailto:contact@pathoptix.dev)
