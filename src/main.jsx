@@ -81,6 +81,6 @@ if (typeof chrome !== 'undefined' && chrome.runtime) {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <TestApp />
+    <App />
   </React.StrictMode>,
 )
